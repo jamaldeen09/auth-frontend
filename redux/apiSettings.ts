@@ -15,7 +15,7 @@ interface ApiResult {
 
 // ** Define base query ** \\
 const baseQuery = fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL,
+    baseUrl: "https://auth-microservice-18d6.onrender.com/api/v1",
     credentials: "include",
 });
 
