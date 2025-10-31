@@ -15,7 +15,7 @@ const authApi = createApi({
     endpoints: (builder) => ({
         register: builder.mutation<ApiResult, Credentials["register"]>({
             query: (body) => ({
-                url: "auth/register",
+                url: "/auth/register",
                 method: "POST",
                 body,
             })
@@ -23,19 +23,19 @@ const authApi = createApi({
 
         login: builder.mutation<ApiResult, Credentials["login"]>({
             query: (body) => ({
-                url: "auth/login",
+                url: "/auth/login",
                 method: "POST",
                 body,
             })
         }),
 
         getAuthState: builder.query<ApiResult, void>({
-            query: () => "auth/me"
+            query: () => "/auth/me"
         }),
 
         logout: builder.mutation<ApiResult, void>({
             query: (body) => ({
-                url: "auth/logout",
+                url: "/auth/logout",
                 method: "POST",
                 body,
             })
