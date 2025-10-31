@@ -7,7 +7,6 @@ import useAuth from "@/hooks/useAuth";
 import { useLogoutMutation } from "@/redux/apis/authApi";
 import CustomSpinner from "@/components/reusableUi/CustomSpinner";
 import { callToast } from "../providers/SonnerProvider";
-import { useRouter } from "next/navigation";
 import { ApiResult } from "@/redux/apiSettings";
 
 

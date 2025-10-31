@@ -25,7 +25,7 @@ const ProtectedRouteProvider: React.FC<ProtectedRouteProps> = ({ children }) => 
         if (!isPending && !usersAuthState.isAuthenticated) {
             router.replace("/?auth=login"); 
         }
-    }, [isPending, usersAuthState.isAuthenticated, router]); // isMounted removed
+    }, [isPending, usersAuthState.isAuthenticated, router]);
 
     // ** Still checking authentication status (blocks FOUC) ** \\
     if (isPending) {

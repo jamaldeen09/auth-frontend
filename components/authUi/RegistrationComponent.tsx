@@ -7,7 +7,7 @@ import { useRegisterMutation } from "@/redux/apis/authApi";
 import z from "zod"
 import { Button } from "../ui/button";
 import CustomSpinner from "../reusableUi/CustomSpinner";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { ApiResult } from "@/redux/apiSettings";

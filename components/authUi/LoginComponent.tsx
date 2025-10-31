@@ -2,7 +2,7 @@
 
 // ** Imports (client component) ** \\
 import { useLoginValidation } from "@/hooks/useValidations";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import useAuth from "@/hooks/useAuth";
 import { ApiResult } from "@/redux/apiSettings";
 import { callToast } from "@/app/providers/SonnerProvider";
