@@ -11,7 +11,8 @@ interface ProtectedRouteProps {
 
 const ProtectedRouteProvider: React.FC<ProtectedRouteProps> = ({ children }) => {
     const router = useRouter();
-    const { usersAuthState } = useAuth();
+    // 🔑 Destructure the new synchronous flag
+    const { usersAuthState, hasLocalAccessToken } = useAuth(); 
 
     // ** The result updates the isAuthenticated flag in your Redux store via extraReducer ** \\
     const { isLoading, isFetching } = useGetAuthStateQuery();
@@ -21,14 +22,14 @@ const ProtectedRouteProvider: React.FC<ProtectedRouteProps> = ({ children }) => 
 
     useEffect(() => {
         // ** Finished checking AND the user is NOT authenticated ** \\
-
+ 
         if (!isPending && !usersAuthState.isAuthenticated) {
             router.replace("/?auth=login"); 
         }
     }, [isPending, usersAuthState.isAuthenticated, router]);
 
     // ** Still checking authentication status (blocks FOUC) ** \\
-    if (isPending) {
+    if (isPending || (hasLocalAccessToken && !usersAuthState.isAuthenticated)) {
         return (
             <div
                 className="flex items-center justify-center h-screen"

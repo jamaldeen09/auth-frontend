@@ -1,7 +1,7 @@
 # 🔐 Auth Frontend (Next.js + Redux Toolkit)
 
 A production-ready authentication frontend built with **Next.js 15**, **TypeScript**, **Redux Toolkit**, and **RTK Query**.  
-It handles **JWT-based authentication**, **token refresh**, and **state persistence** through a clean and reusable architecture.
+It handles **JWT-based authentication**, **token refresh**, and **state persistence** through **localStorage**.
 
 ---
 
@@ -12,7 +12,7 @@ It handles **JWT-based authentication**, **token refresh**, and **state persiste
 - 🔁 **Automatic token refresh** using a custom `baseQueryWithReauth`
 - 🧱 Modular folder structure for scalability
 - ✅ **Zod validation** for forms
-- 🔒 **Cookie-based session handling** (with backend integration)
+- 🔒 **LocalStorage-based session handling**
 - 🧩 Reusable UI components & hooks (`useAuth`, `useValidations`)
 
 ---
@@ -37,7 +37,6 @@ It handles **JWT-based authentication**, **token refresh**, and **state persiste
 ├── apis/
 └── slices/
 
-
 ---
 
 ## ⚙️ Tech Stack
@@ -58,6 +57,7 @@ It handles **JWT-based authentication**, **token refresh**, and **state persiste
 - `baseQueryWithReauth` automatically retries failed requests (401)
 - Refresh endpoint (`auth/refresh`) renews tokens
 - Auth state updates via `setAuth()` in `userSlice`
+- Tokens are stored in **localStorage** (`accessToken` + `refreshToken`)
 
 ### 🔸 State Management
 - `store.ts` centralizes reducers and middleware
@@ -76,8 +76,3 @@ It handles **JWT-based authentication**, **token refresh**, and **state persiste
    ```bash
    git clone https://github.com/jamaldeen09/auth-frontend.git
    cd auth-frontend
-
--- 
-Author
- - Jamal Omotoyosi
- - https://github.com/jamaldeen09 (Github)

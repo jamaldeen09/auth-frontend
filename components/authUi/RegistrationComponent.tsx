@@ -55,9 +55,14 @@ const RegistrationComponent = (): React.ReactElement => {
     let isMounted = true;
 
     if (isSuccess && !isError && !error) {
-      const typedData = ((data.data) as { auth: { userId: string; name: string; } });
+      const typedData = ((data.data) as {
+        auth: { userId: string; name: string; },
+        accessToken: string;
+        refreshToken: string;
+      });
+
       if (isMounted) {
-        setAuthState(typedData?.auth);
+        setAuthState({ ...typedData.auth, accessToken: typedData.accessToken, refreshToken: typedData.refreshToken });
         registrationForm.reset();
         router.push("/dashboard");
       }

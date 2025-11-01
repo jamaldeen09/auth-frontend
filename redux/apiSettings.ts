@@ -1,8 +1,7 @@
 // ** Imports ** \\
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import {logout, setAuth } from "./slices/userSlice"; 
-
+import { logout, refreshAuth, setAuth } from "./slices/userSlice";
 
 // ** Define api result upon response ** \\
 interface ApiResult {
@@ -13,33 +12,64 @@ interface ApiResult {
     data?: unknown;
 }
 
-// ** Define base query ** \\
+// ** Base query with access token from localStorage ** \\
 const baseQuery = fetchBaseQuery({
-    baseUrl: "https://auth-microservice-18d6.onrender.com/api/v1",
-    credentials: "include",
+    baseUrl: "http://localhost:4080/api/v1",
+    prepareHeaders: (headers) => {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+            headers.set("Authorization", `Bearer ${token}`);
+        }
+        return headers;
+    },
 });
 
-// ** Logic to refresh token immediately after access token expires ** \\
+// ** Base query with automatic refresh on 401 ** \\
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
     args,
     api,
     extraOptions
 ) => {
+    // ** First, try the original request ** \\
     let result = await baseQuery(args, api, extraOptions);
+
+    // ** If 401, try refreshing token ** \\
     if (result.error && result.error.status === 401) {
-        const refreshResult = await baseQuery("/auth/refresh", api, extraOptions);
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        if (!refreshToken) {
+            api.dispatch(logout());
+            return result;
+        }
+
+        const refreshResult = await baseQuery(
+            {
+                url: "/auth/refresh",
+                method: "POST",
+                headers: { "x-refresh-token": refreshToken },
+            },
+            api,
+            extraOptions
+        );
 
         if (refreshResult.data) {
             const typedResult = (refreshResult.data as ApiResult).data as {
-                auth: { userId: string; name: string; }
-            }
+                auth: { userId: string; name: string; };
+                accessToken: string;
+            };
 
-            api.dispatch(setAuth(typedResult.auth));
-            
-            // ** Retry the original query ** \\
+            console.log("RECEIVED REFRESH RESULT: ", refreshResult.data);
+
+            // ** Update tokens in localStorage ** \\
+            localStorage.setItem("accessToken", typedResult.accessToken);
+
+            // ** Update redux state ** \\
+            api.dispatch(refreshAuth({...typedResult.auth, accessToken: typedResult.accessToken }));
+
+            // ** Retry the original request ** \\
             result = await baseQuery(args, api, extraOptions);
         } else {
-            // ** Logout if refresh failed ** \\
+            // ** Refresh failed, log user out ** \\
             api.dispatch(logout());
         }
     }
@@ -47,4 +77,4 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
     return result;
 };
 
-export { baseQueryWithReauth, type ApiResult }
+export { baseQueryWithReauth, type ApiResult };

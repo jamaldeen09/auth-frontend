@@ -51,9 +51,16 @@ const LoginComponent = (): React.ReactElement => {
     let isMounted = true;
 
     if (isSuccess && !isError && !error) {
-      const typedData = ((data.data) as { auth: { userId: string; name: string; } });
+      const typedData = ((data.data) as {
+        auth: { userId: string; name: string; },
+        accessToken: string;
+        refreshToken: string;
+      });
+
+
+
       if (isMounted) {
-        setAuthState(typedData?.auth);
+        setAuthState({ ...typedData.auth, accessToken: typedData.accessToken, refreshToken: typedData.refreshToken });
         loginForm.reset();
         router.push("/dashboard");
       }
@@ -61,8 +68,6 @@ const LoginComponent = (): React.ReactElement => {
 
     if (isError && error && "data" in error && !isSuccess) {
       if (isMounted) {
-        console.log("RECEIVED ERROR: ", error);
-        console.log("IS MOUNTED!: ", isMounted)
         callToast("error", (error as { data: ApiResult }).data.message);
       }
     }
@@ -111,12 +116,12 @@ const LoginComponent = (): React.ReactElement => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-              <Input
-                    placeholder="Password"
-                    type="text"
-                    {...field}
-                    className="h-11"
-                  />
+                <Input
+                  placeholder="Password"
+                  type="text"
+                  {...field}
+                  className="h-11"
+                />
               </FormControl>
               <FormMessage className="text-xs" />
             </FormItem>
