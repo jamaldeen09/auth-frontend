@@ -14,7 +14,7 @@ interface ApiResult {
 
 // ** Base query with access token from localStorage ** \\
 const baseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:4080/api/v1",
+    baseUrl: "https://auth-microservice-18d6.onrender.com/api/v1",
     prepareHeaders: (headers) => {
         const token = localStorage.getItem("accessToken");
         if (token) {
@@ -57,8 +57,6 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
                 auth: { userId: string; name: string; };
                 accessToken: string;
             };
-
-            console.log("RECEIVED REFRESH RESULT: ", refreshResult.data);
 
             // ** Update tokens in localStorage ** \\
             localStorage.setItem("accessToken", typedResult.accessToken);
