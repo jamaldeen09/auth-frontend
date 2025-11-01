@@ -43,7 +43,7 @@ const ProtectedRouteProvider: React.FC<ProtectedRouteProps> = ({ children }) => 
         // ** Return loading/null while the redirect takes effect **
         return (
             <div
-                className="flex items-center justify-center flex-col gap-2 text-center"
+                className="flex items-center justify-center flex-col gap-2 text-center h-screen"
             >
                 <CustomSpinner className="size-8" />
                 <p className="text-sm">Redirecting to login...</p>
